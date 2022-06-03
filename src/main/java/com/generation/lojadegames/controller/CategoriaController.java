@@ -35,7 +35,7 @@ public class CategoriaController {
 		// select * from tb_categorias;
 	}
 	
-	@GetMapping("/{id")
+	@GetMapping("/{id}")
 	public ResponseEntity<Categoria> getById(@PathVariable Long id){
 		return categoriaRepository.findById(id)
 				.map(resposta -> ResponseEntity.ok(resposta))
@@ -49,13 +49,6 @@ public class CategoriaController {
 		return ResponseEntity.ok(categoriaRepository.findAllByGeneroContainingIgnoreCase(genero));
 	
 		// select * from tb_categorias where genero like "%genero%";
-		
-	}
-	@GetMapping("/classificacaoIndicativa/{classificacaoIndicativa}")
-	public ResponseEntity<List<Categoria>>getByclassificacaoIndicativa(@PathVariable String classificacaoIndicativa){
-		return ResponseEntity.ok(categoriaRepository.findAllByclassificacaoIndicativaContainingIgnoreCase(classificacaoIndicativa));
-	
-		// select * from tb_categorias where classificacaoIndicativa like "%classificacaoIndicativa%";	
 	}
 	
 	@PostMapping
@@ -65,12 +58,19 @@ public class CategoriaController {
 	}
 	@PutMapping
 	public ResponseEntity<Categoria> putCategoria(@Valid @RequestBody Categoria categoria){
-		return ResponseEntity.status(HttpStatus.OK).body(categoriaRepository.save(categoria));
+		return categoriaRepository.findById(categoria.getId())
+				.map(obj -> ResponseEntity.ok(categoriaRepository.save(categoria)))
+				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	}
 	
-	@DeleteMapping ("/{id")
-	public void deleteCategoria(@PathVariable Long id) {
-		categoriaRepository.deleteById(id);
+	@DeleteMapping ("/{id}")
+	public ResponseEntity<?> deleteCategoria (@PathVariable Long id) {
+		return categoriaRepository.findById(id)
+				.map(categoria -> {
+					categoriaRepository.deleteById(id);
+					return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+				})
+				.orElse(ResponseEntity.notFound().build());
 	}
 	
 	

@@ -12,7 +12,7 @@ import com.generation.lojadegames.model.Categoria;
 public interface CategoriaRepository extends JpaRepository <Categoria, Long>{
 
 	public List <Categoria> findAllByGeneroContainingIgnoreCase(@Param("genero")String genero);
-	public List <Categoria> findAllByclassificacaoIndicativaContainingIgnoreCase(@Param("classificacaoIndicativa")String classificacaoIndicativa);
+	
 	
 	// select * from tb_categorias where genero like "%genero%";
 	// select * from tb_categorias where classificacaoIndicativa like "%classificacaoIndicativa%";
