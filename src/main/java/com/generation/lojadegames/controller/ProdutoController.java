@@ -34,7 +34,7 @@ public class ProdutoController {
 	private CategoriaRepository categoriaRepository;
 
 	
-	@GetMapping("/produto")
+	@GetMapping
 	public ResponseEntity<List<Produto>>getAll(){
 		return ResponseEntity.ok(produtoRepository.findAll());
 		
@@ -69,22 +69,18 @@ public class ProdutoController {
 	
 	@PutMapping
 	public ResponseEntity<Produto> putProduto(@Valid @RequestBody Produto produto){
-		if(produtoRepository.existsById(produto.getId())){
-			if(categoriaRepository.existsById(produto.getCategorias().getId()))
-					return ResponseEntity.status(HttpStatus.OK).body(produtoRepository.save(produto));
-				
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		return produtoRepository.findById(produto.getId()).map(obj -> ResponseEntity.ok(produtoRepository.save(produto)))
+				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	}
 	
 	@DeleteMapping ("/{id}")
 	public ResponseEntity<?> deleteProduto (@PathVariable Long id) {
 		return produtoRepository.findById(id)
-			.map(response -> {
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-			})
-					.orElse(ResponseEntity.notFound().build());
+				.map(produto -> {
+					produtoRepository.deleteById(id);
+					return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+				})
+				.orElse(ResponseEntity.notFound().build());
 	}
 	
 

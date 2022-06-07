@@ -1,7 +1,5 @@
 package com.generation.lojadegames.model;
 
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,7 +30,6 @@ public class Categoria {
 	
 	@OneToMany (mappedBy = "categoria", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties ("categoria")
-	private List<Produto> produto;
 
 	public Long getId() {
 		return id;
@@ -58,13 +55,6 @@ public class Categoria {
 		this.classificacaoIndicativa = classificacaoIndicativa;
 	}
 
-	public List<Produto> getProdutos() {
-		return produto;
-	}
-
-	public void setProdutos(List<Produto> produtos) {
-		this.produto = produtos;
-	}
 
 	
 
